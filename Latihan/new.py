@@ -1,47 +1,37 @@
-# Import the AudioSegment class for processing audio and the
-# split_on_silence function for separating out silent chunks.
-from pydub import AudioSegment
-from pydub.silence import split_on_silence
-from numpy.fft import fft
-# Define a function to normalize a chunk to a target amplitude.
+from scipy.io import wavfile
+import numpy as np
+import matplotlib.pyplot as plt
+freq_sample, sig_audio = wavfile.read("Test.wav")
 
+print(f"Shape of Signal: {sig_audio.shape}")
+print(f"Signal Datatype: {sig_audio.dtype}")
+print(f"Signal Duration: {round(sig_audio.shape[0]/float(freq_sample),2)} second")
 
-def match_target_amplitude(aChunk, target_dBFS):
-    ''' Normalize given audio chunk '''
-    change_in_dBFS = target_dBFS - aChunk.dBFS
-    return aChunk.apply_gain(change_in_dBFS)
+# Normalize the Signal Value and Plot it on a graph
+pow_audio_signal = sig_audio / np.power(2, 15)
+pow_audio_signal = pow_audio_signal [:100]
+time_axis = 1000 * np.arange(0, len(pow_audio_signal), 1) / float(freq_sample)
 
+plt.plot(time_axis, pow_audio_signal, color='blue')
+plt.show()
 
-# Load your audio.
-song = AudioSegment.from_wav('Latihan/Test.wav')
-
-# Split track where the silence is 2 seconds or more and get chunks using
-# the imported function.
-chunks = split_on_silence(
-    # Use the loaded audio.
-    song,
-    # Specify that a silent chunk must be at least 2 seconds or 2000 ms long.
-    min_silence_len=2000,
-    # Consider a chunk silent if it's quieter than -16 dBFS.
-    # (You may want to adjust this parameter.)
-    silence_thresh=-16
-)
-
-# Process each chunk with your parameters
-for i, chunk in enumerate(chunks):
-    # Create a silence chunk that's 0.5 seconds (or 500 ms) long for padding.
-    silence_chunk = AudioSegment.silent(duration=500)
-
-    # Add the padding chunk to beginning and end of the entire chunk.
-    audio_chunk = silence_chunk + chunk + silence_chunk
-
-    # Normalize the entire chunk.
-    normalized_chunk = match_target_amplitude(audio_chunk, -20.0)
-
-    # Export the audio chunk with new bitrate.
-    print("Exporting chunk{0}.mp3.".format(i))
-    normalized_chunk.export(
-        ".//chunk{0}.mp3".format(i),
-        bitrate="192k",
-        format="mp3"
-    )
+# Working on the same input file
+# Extracting the length and the half-length of the signal to input to the foruier transform
+sig_length = len(sig_audio)
+half_length = np.ceil((sig_length + 1) / 2.0).astype(np.int)
+# We will now be using the Fourier Transform to form the frequency domain of the signal
+signal_freq = np.fft.fft(sig_audio)
+# Normalize the frequency domain and square it
+signal_freq = abs(signal_freq[0:half_length]) / sig_length
+signal_freq **= 2
+transform_len = len(signal_freq)
+# The Fourier transformed signal now needs to be adjusted for both even and odd cases
+if sig_length % 2:
+  signal_freq[1:transform_len] *= 2
+else:
+  signal_freq[1:transform_len-1] *= 2
+# Extract the signal's strength in decibels (dB)
+exp_signal = 10 * np.log10(signal_freq)
+x_axis = np.arange(0, half_length, 1) * (freq_sample / sig_length) / 1000.0
+plt.plot(x_axis, exp_signal, color='green', linewidth=1)
+plt.show()
