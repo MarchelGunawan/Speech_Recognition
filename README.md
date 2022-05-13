@@ -39,7 +39,7 @@ python -m venv --system-site-packages
 .\venv\Scripts\activate
 ```
 
-#### Linux
+### Linux
 
 ```bash
 $ python3 -m venv --system-site-packages ./venv
