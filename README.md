@@ -1,4 +1,6 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/MarchelGunawan/Speech_Recognition)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/MarchelGunawan/Speech_Recognition)
+![GitHub last commit](https://img.shields.io/github/last-commit/MarchelGunawan/Speech_Recognition)
 # Speech Recognition Repository
 
 This is speech recognition Repository by Marchel Gunawan
