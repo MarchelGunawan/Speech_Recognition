@@ -31,7 +31,7 @@ For the TensorFlow you can go to the web in [here](https://www.tensorflow.org/) 
 
 (this is optional if you want to use python virtual environment)
 
-This is for Windows user
+### Windows
 
 ```bash
 python -m venv --system-site-packages
@@ -39,7 +39,7 @@ python -m venv --system-site-packages
 .\venv\Scripts\activate
 ```
 
-This for Linux user
+#### Linux
 
 ```bash
 $ python3 -m venv --system-site-packages ./venv
@@ -66,7 +66,7 @@ pip3 install panda
 
 ## How to install the Jupyter Notebook
 
-Install the classic Jupyter Notebook
+### Jupyter Notebook
 
 ```bash
 pip3 install jupyter notebook 
@@ -78,7 +78,7 @@ To run the notebook
 jupyter notebook
 ```
 
-or if you want to use JupyterLab
+### JupyterLab
 
 ```bash
 pip3 install jupyterlab
